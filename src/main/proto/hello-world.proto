@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+option java_package = "br.com.macielgoncalves.grpc";
+option java_multiple_files = true;
+
+package br.com.macielgoncalves.grpc;
+
+service HelloService {
+  rpc Hello(HelloReq) returns (HelloRes);
+}
+
+message HelloReq {
+  string msg = 1;
+}
+
+message HelloRes {
+  string msg = 1;
+}
