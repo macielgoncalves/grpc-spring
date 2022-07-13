@@ -5,7 +5,7 @@ option java_multiple_files = true;
 
 package br.com.macielgoncalves.grpc;
 
-service ProdutoService {
+service ProductService {
   rpc Create(ProductResquet) returns (ProductResponse);
   rpc FindById(RequestById) returns (ProductResponse);
   rpc Delete(RequestById) returns (ProductResponse);

@@ -56,7 +56,7 @@ public final class Produto {
       "e\030\001 \001(\t\022\r\n\005price\030\002 \001(\001\022\031\n\021quantity_in_st" +
       "ock\030\003 \001(\005\"U\n\017ProductResponse\022\n\n\002id\030\001 \001(\003" +
       "\022\014\n\004name\030\002 \001(\t\022\r\n\005price\030\003 \001(\001\022\031\n\021quantit" +
-      "y_in_stock\030\004 \001(\0052\244\003\n\016ProdutoService\022c\n\006C" +
+      "y_in_stock\030\004 \001(\0052\244\003\n\016ProductService\022c\n\006C" +
       "reate\022+.br.com.macielgoncalves.grpc.Prod" +
       "uctResquet\032,.br.com.macielgoncalves.grpc" +
       ".ProductResponse\022b\n\010FindById\022(.br.com.ma" +
