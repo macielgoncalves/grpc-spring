@@ -1,12 +1,10 @@
 package br.com.macielgoncalves.grpc.resources;
 
-import br.com.macielgoncalves.grpc.ProductResponse;
-import br.com.macielgoncalves.grpc.ProductResquet;
-import br.com.macielgoncalves.grpc.ProductServiceGrpc;
-import br.com.macielgoncalves.grpc.RequestById;
+import br.com.macielgoncalves.grpc.*;
 import io.grpc.StatusRuntimeException;
 import net.devh.boot.grpc.client.inject.GrpcClient;
 import org.assertj.core.api.Assertions;
+import org.assertj.core.groups.Tuple;
 import org.flywaydb.core.Flyway;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -69,10 +67,10 @@ public class ProductResourceIntegrationTest {
     public void findByIdSuccessTest() {
         RequestById request = RequestById.newBuilder().setId(1L).build();
 
-        ProductResponse responde = serviceBlockingStub.findById(request);
+        ProductResponse response = serviceBlockingStub.findById(request);
 
-        Assertions.assertThat(responde.getId()).isEqualTo(request.getId());
-        Assertions.assertThat(responde.getName()).isEqualTo("Product A");
+        Assertions.assertThat(response.getId()).isEqualTo(request.getId());
+        Assertions.assertThat(response.getName()).isEqualTo("Product A");
     }
 
     @Test
@@ -91,5 +89,32 @@ public class ProductResourceIntegrationTest {
         RequestById request = RequestById.newBuilder().setId(1L).build();
 
         Assertions.assertThatNoException().isThrownBy(() -> serviceBlockingStub.delete(request));
+    }
+
+    @Test
+    @DisplayName("when delete method is call with invalid id throws ProductNotFoundException")
+    public void delteExceptionTest() {
+        RequestById request = RequestById.newBuilder().setId(100L).build();
+
+        Assertions.assertThatExceptionOfType(StatusRuntimeException.class)
+                .isThrownBy(() -> serviceBlockingStub.delete(request))
+                .withMessage("NOT_FOUND: Produto ID 100 não encontrado.");
+    }
+
+    @Test
+    @DisplayName("when findAll method is call a list product is returned")
+    public void findAllSuccessTest() {
+        EmptyRequesty request = EmptyRequesty.newBuilder().build();
+
+        ProductResponseList responseList = serviceBlockingStub.findAll(request);
+
+        Assertions.assertThat(responseList).isInstanceOf(ProductResponseList.class);
+        Assertions.assertThat(responseList.getProductsCount()).isEqualTo(2);
+        Assertions.assertThat(responseList.getProductsList())
+                .extracting("id", "name", "price", "quantityInStock")
+                .contains(
+                        Tuple.tuple(1L, "Product A", 10.99, 10),
+                        Tuple.tuple(2L, "Product B", 10.99, 10)
+                );
     }
 }

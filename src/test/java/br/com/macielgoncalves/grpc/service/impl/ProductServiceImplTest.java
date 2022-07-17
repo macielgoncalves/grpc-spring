@@ -7,6 +7,7 @@ import br.com.macielgoncalves.grpc.exception.ProductAlreadyExistsException;
 import br.com.macielgoncalves.grpc.exception.ProductNotFoundException;
 import br.com.macielgoncalves.grpc.repository.ProductRepository;
 import org.assertj.core.api.Assertions;
+import org.assertj.core.groups.Tuple;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -15,6 +16,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.List;
 import java.util.Optional;
 
 @ExtendWith(MockitoExtension.class)
@@ -97,5 +99,24 @@ public class ProductServiceImplTest {
 
         Assertions.assertThatExceptionOfType(ProductNotFoundException.class)
                 .isThrownBy(() -> productService.delete(id));
+    }
+
+    @Test
+    @DisplayName("when findALL product is call a list product is returned")
+    public void findAllSuccessTest() {
+        List<Product> products = List.of(
+                new Product(1L, "Product Name 01", 10.00, 10),
+                new Product(2L, "Product Name 02", 10.00, 8)
+        );
+        Mockito.when(productRepository.findAll()).thenReturn(products);
+
+        List<ProductOutputDTO> outputDTOS = productService.findAll();
+
+        Assertions.assertThat(outputDTOS)
+                .extracting("id", "name", "price", "quantityInStock")
+                .contains(
+                        Tuple.tuple(1L, "Product Name 01", 10.00, 10),
+                        Tuple.tuple(2L, "Product Name 02", 10.00, 8)
+                );
     }
 }

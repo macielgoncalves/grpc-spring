@@ -10,6 +10,7 @@ import br.com.macielgoncalves.grpc.util.ProductConverterUtil;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class ProductServiceImpl implements IProductService {
@@ -44,7 +45,10 @@ public class ProductServiceImpl implements IProductService {
 
     @Override
     public List<ProductOutputDTO> findAll() {
-        return null;
+        var products = productRepository.findAll();
+        return products.stream()
+                .map(ProductConverterUtil::productToProductOutputDto)
+                .collect(Collectors.toList());
     }
 
     private void checkDuplicity(String name) {
