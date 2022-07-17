@@ -8,11 +8,12 @@ package br.com.macielgoncalves.grpc;
 service ProductService {
   rpc Create(ProductResquet) returns (ProductResponse);
   rpc FindById(RequestById) returns (ProductResponse);
-  rpc Delete(RequestById) returns (ProductResponse);
+  rpc Delete(RequestById) returns (EmptyResponse);
   rpc FindAll(EmptyRequesty) returns (ProductResponseList);
 }
 
 message EmptyRequesty {}
+message EmptyResponse {}
 
 message ProductResponseList {
   repeated ProductResponse products = 1;

@@ -15,6 +15,8 @@ public class Product {
     private Double price;
     private Integer quantityInStock;
 
+    public Product() {}
+
     public Product(Long id) {
         this.id = id;
     }

@@ -1,8 +1,6 @@
 package br.com.macielgoncalves.grpc.resources;
 
-import br.com.macielgoncalves.grpc.ProductResponse;
-import br.com.macielgoncalves.grpc.ProductResquet;
-import br.com.macielgoncalves.grpc.ProductServiceGrpc;
+import br.com.macielgoncalves.grpc.*;
 import br.com.macielgoncalves.grpc.dto.ProductInputDTO;
 import br.com.macielgoncalves.grpc.dto.ProductOutputDTO;
 import br.com.macielgoncalves.grpc.service.IProductService;
@@ -36,6 +34,27 @@ public class ProductResource extends ProductServiceGrpc.ProductServiceImplBase {
                 .build();
 
         responseObserver.onNext(response);
+        responseObserver.onCompleted();
+    }
+
+    @Override
+    public void findById(RequestById request, StreamObserver<ProductResponse> responseObserver) {
+        ProductOutputDTO outputDTO = productService.findById(request.getId());
+        ProductResponse response = ProductResponse.newBuilder()
+                .setId(outputDTO.getId())
+                .setName(outputDTO.getName())
+                .setPrice(outputDTO.getPrice())
+                .setQuantityInStock(outputDTO.getQuantityInStock())
+                .build();
+
+        responseObserver.onNext(response);
+        responseObserver.onCompleted();
+    }
+
+    @Override
+    public void delete(RequestById request, StreamObserver<EmptyResponse> responseObserver) {
+        productService.delete(request.getId());
+        responseObserver.onNext(EmptyResponse.newBuilder().build());
         responseObserver.onCompleted();
     }
 }
